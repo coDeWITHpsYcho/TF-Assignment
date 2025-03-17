@@ -55,27 +55,38 @@ def google_login(request):
         print(e)
         return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 def update_profile(request):
-    try:
-        uid = request.data.get('uid')  # Firebase UID
-        age = request.data.get('age')
-        contact_number = request.data.get('contact_number')
-        employer_details = request.data.get('employer_details')
+    uid = request.data.get('uid')  # Firebase UID
 
+    if not uid:
+        return Response({'error': 'UID is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Fetch the user by UID
         user = User.objects.get(username=uid)
         profile = Profile.objects.get(user=user)
 
         # Update profile fields
-        profile.age = age
-        profile.contact_number = contact_number
-        profile.employer_details = employer_details
+        profile.age = request.data.get('age', profile.age)
+        profile.contact_number = request.data.get('contact_number', profile.contact_number)
+        profile.employer_details = request.data.get('employer_details', profile.employer_details)
         profile.save()
 
-        return Response({'message': 'Profile updated successfully'})
+        updated_data = {
+            'username': user.username,
+            'name': user.first_name,
+            'email': user.email,
+            'profile_picture': profile.profile_picture,
+            'age': profile.age,
+            'contact_number': profile.contact_number,
+            'employer_details': profile.employer_details,
+        }
+
+        return Response({'message': 'Profile updated successfully', 'user': updated_data}, status=status.HTTP_200_OK)
 
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         print(e)
-        return Response({'error': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

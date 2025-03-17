@@ -10,3 +10,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+    
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/profile_photos/<user_id>/<filename>
+    return f'profile_photos/{instance.user.id}/{filename}'
