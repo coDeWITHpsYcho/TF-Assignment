@@ -119,6 +119,12 @@ const Dashboard = () => {
           <button onClick={handleEditToggle} style={buttonStyle}>Edit Profile</button>
         </>
       )}
+
+      <div style={{ marginTop: '30px' }}>
+        <h2>Account Details</h2>
+        <p><strong>Account Type:</strong> {user.account.account_type}</p>
+        <p><strong>Current Balance:</strong> ₹ {user.account.current_balance}</p>
+      </div>
     </div>
   );
 };

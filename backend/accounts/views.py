@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from firebase_admin import auth as firebase_auth
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Account
 
 @api_view(['POST'])
 def google_login(request):
@@ -17,7 +17,7 @@ def google_login(request):
         uid = decoded_token['uid']
         email = decoded_token.get('email')
         name = decoded_token.get('name')
-        picture = decoded_token.get('picture')  
+        picture = decoded_token.get('picture')
 
         # Create or get the user
         user, created = User.objects.get_or_create(
@@ -26,6 +26,7 @@ def google_login(request):
         )
 
         profile, profile_created = Profile.objects.get_or_create(user=user)
+        account, _ = Account.objects.get_or_create(user=user)
 
         # If the profile picture is empty, update it
         if profile_created or not profile.profile_picture:
@@ -33,11 +34,11 @@ def google_login(request):
         if not profile.age:
             profile.age = 0
         if not profile.contact_number:
-            profile.contact_number = '' 
+            profile.contact_number = ''
         if not profile.employer_details:
             profile.employer_details = ''
 
-            profile.save()
+        profile.save()
 
         user_data = {
             'username': user.username,
@@ -47,13 +48,20 @@ def google_login(request):
             'age': profile.age,
             'contact_number': profile.contact_number,
             'employer_details': profile.employer_details,
+            'account': {
+                'account_type': account.account_type,
+                'current_balance': account.current_balance
+            } if account else None
         }
+
+        print('Sending user_data:', user_data)
 
         return Response({'message': 'Login successful', 'user': user_data})
 
     except Exception as e:
         print(e)
         return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['PATCH'])
 def update_profile(request):
@@ -66,13 +74,15 @@ def update_profile(request):
         # Fetch the user by UID
         user = User.objects.get(username=uid)
         profile = Profile.objects.get(user=user)
+        account, _ = Account.objects.get_or_create(user=user)
 
-        # Update profile fields
+        # Update profile fields (these fields are editable by user)
         profile.age = request.data.get('age', profile.age)
         profile.contact_number = request.data.get('contact_number', profile.contact_number)
         profile.employer_details = request.data.get('employer_details', profile.employer_details)
         profile.save()
 
+        # Return updated user data INCLUDING account info (non-editable by user)
         updated_data = {
             'username': user.username,
             'name': user.first_name,
@@ -81,7 +91,13 @@ def update_profile(request):
             'age': profile.age,
             'contact_number': profile.contact_number,
             'employer_details': profile.employer_details,
+            'account': {
+                'account_type': account.account_type,
+                'current_balance': account.current_balance
+            } if account else None
         }
+
+        print('Sending updated_data:', updated_data)
 
         return Response({'message': 'Profile updated successfully', 'user': updated_data}, status=status.HTTP_200_OK)
 
