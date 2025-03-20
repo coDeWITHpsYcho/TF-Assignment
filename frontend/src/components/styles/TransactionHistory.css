@@ -1,0 +1,51 @@
+.transaction-history-section {
+    margin: 40px auto;
+    width: 90%;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .transaction-history-section h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+  }
+  
+  .transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .transaction-table th,
+  .transaction-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: center;
+  }
+  
+  .transaction-table th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .transaction-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .transaction-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .transaction-table .sent {
+    color: #e74c3c;
+    font-weight: 500;
+  }
+  
+  .transaction-table .received {
+    color: #2ecc71;
+    font-weight: 500;
+  }
+  

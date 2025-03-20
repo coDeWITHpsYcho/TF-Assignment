@@ -1,0 +1,55 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/* Container */
+.google-login-container {
+  min-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #f8f9fa, #e9ecef);
+  font-family: 'Inter', sans-serif;
+  padding: 20px;
+}
+
+/* Heading */
+.google-login-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Subtitle */
+.google-login-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Button */
+.google-login-button {
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #4285F4;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  min-width: 260px;
+}
+
+/* Hover and Active states */
+.google-login-button:hover {
+  background-color: #357ae8;
+  box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
+}
+
+.google-login-button:active {
+  background-color: #3367d6;
+  transform: scale(0.98);
+}
